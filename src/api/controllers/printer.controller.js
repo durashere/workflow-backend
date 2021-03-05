@@ -42,7 +42,7 @@ export const getPrinter = async (req, res) => {
 };
 
 export const createPrinter = async (req, res) => {
-  const newPrinter = await Printer.create(req.body);
+  const newPrinter = await Printer.create(req.body).populate('toners');
 
   return res.status(201).json({
     printer: newPrinter,
@@ -53,7 +53,7 @@ export const updatePrinter = async (req, res) => {
   const printer = await Printer.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
-  });
+  }).populate('toners');
 
   return res.status(200).json({
     printer,
