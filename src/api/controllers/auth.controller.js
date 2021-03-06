@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import jwtDecode from 'jwt-decode';
+
 import User from '../models/user.model';
 import { jwtSecret, jwtExpire } from '../../config/config';
 
