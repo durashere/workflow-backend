@@ -7,9 +7,12 @@ import {
   createToner,
   updateToner,
   deleteToner,
+  getAllUncategorized,
 } from '../../controllers/toner.controller';
 
 const router = Router();
+
+router.get('/uncategorized', getAllUncategorized);
 
 router
   .route('/')

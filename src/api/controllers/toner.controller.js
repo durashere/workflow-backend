@@ -82,3 +82,20 @@ export const deleteToner = async (req, res) => {
 
   return res.status(204).json();
 };
+
+export const getAllUncategorized = async (req, res) => {
+  const categorizedToners = await Printer.find({}, { _id: false }).select(
+    'toners'
+  );
+  const arrays = categorizedToners.map((toner) => toner.toners);
+  const flattedToners = arrays.flat();
+
+  const finalToners = await Toner.find({
+    _id: { $nin: flattedToners },
+  });
+
+  return res.status(200).json({
+    results: finalToners.length,
+    toners: finalToners,
+  });
+};
