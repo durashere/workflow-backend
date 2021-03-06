@@ -12,7 +12,12 @@ import {
 
 const router = Router();
 
-router.get('/uncategorized', getAllUncategorized);
+router.get(
+  '/uncategorized',
+  protect,
+  restrictTo('user', 'admin'),
+  getAllUncategorized
+);
 
 router
   .route('/')
