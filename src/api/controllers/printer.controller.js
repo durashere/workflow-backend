@@ -25,6 +25,7 @@ export const getAllPrinters = async (req, res) => {
   const printers = await Printer.find(queryObjPrinter).populate({
     path: 'toners',
     match: queryObjToner,
+    options: { sort: { color: 1 } },
   });
 
   return res.status(200).json({
