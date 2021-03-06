@@ -1,7 +1,7 @@
 import Template from '../models/template.model';
 
 export const getAllTemplates = async (req, res) => {
-  const templates = await Template.find();
+  const templates = await Template.find().sort({ name: 1 });
 
   return res.status(200).json({
     results: templates.length,
