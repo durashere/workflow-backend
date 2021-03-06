@@ -45,7 +45,7 @@ export const getPrinter = async (req, res) => {
 };
 
 export const createPrinter = async (req, res) => {
-  const newPrinter = await Printer.create(req.body).populate('toners');
+  const newPrinter = await Printer.create(req.body);
 
   return res.status(201).json({
     printer: newPrinter,
