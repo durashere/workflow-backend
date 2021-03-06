@@ -5,6 +5,7 @@
   "scripts": {
     "prebuild": "rm -rf build/*",
     "build": "babel src -d build",
+    "deploy": "git pull && yarn build && pm2 restart workflow-backend",
     "start": "cross-env NODE_ENV=production node ./build/index.js",
     "dev": "cross-env NODE_ENV=development nodemon --exec babel-node ./src/index.js"
   },
