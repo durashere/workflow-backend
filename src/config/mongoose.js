@@ -5,7 +5,7 @@ if (env === 'development') {
   mongoose.set('debug', true);
 }
 
-exports.connect = async () => {
+export default async () => {
   try {
     await mongoose.connect(mongo.uri, {
       useNewUrlParser: true,
@@ -19,6 +19,4 @@ exports.connect = async () => {
   } catch (err) {
     console.log(err);
   }
-
-  return mongoose.connection;
 };

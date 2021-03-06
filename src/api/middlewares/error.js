@@ -1,6 +1,7 @@
-const httpStatus = require('http-status');
-const APIError = require('../utils/APIError');
-const { env } = require('../../config/config');
+import httpStatus from 'http-status';
+
+import APIError from '../utils/APIError';
+import { env } from '../../config/config';
 
 /**
  * Error handler. Send stacktrace only during development
