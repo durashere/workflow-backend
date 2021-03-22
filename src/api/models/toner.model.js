@@ -12,6 +12,13 @@ const tonerSchema = new mongoose.Schema(
       enum: ['Black', 'Cyan', 'Magenta', 'Yellow'],
       required: [true, 'You must select toner color'],
     },
+    location: {
+      type: String,
+      enum: {
+        values: ['kra', 'war'],
+        message: 'Location must be set',
+      },
+    },
   },
   { timestamps: true }
 );

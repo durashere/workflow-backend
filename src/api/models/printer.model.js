@@ -11,6 +11,13 @@ const printerSchema = new mongoose.Schema(
       type: String,
       required: [true, 'You must select printer model'],
     },
+    location: {
+      type: String,
+      enum: {
+        values: ['kra', 'war'],
+        message: 'Location must be set',
+      },
+    },
     toners: [
       {
         type: mongoose.Schema.ObjectId,

@@ -6,6 +6,9 @@ export const getAllToners = async (req, res) => {
   const excludedFields = ['page', 'sort', 'limit', 'fields'];
   excludedFields.forEach((el) => delete queryObj[el]);
 
+  // Filter by location
+  queryObj.location = req.user.location;
+
   let queryStr = JSON.stringify(queryObj);
   queryStr = queryStr.replace(
     /\b(gte)|(gt)|(lte)|(lt)\b/g,
@@ -41,8 +44,13 @@ export const getAllUncategorized = async (req, res) => {
   const arrays = categorizedToners.map((toner) => toner.toners);
   const flattedToners = arrays.flat();
 
+  // Filter by location
+  const queryObj = {};
+  queryObj.location = req.user.location;
+
   const finalToners = await Toner.find({
     _id: { $nin: flattedToners },
+    ...queryObj,
   });
 
   return res.status(200).json({
@@ -60,6 +68,8 @@ export const getToner = async (req, res) => {
 };
 
 export const createToner = async (req, res) => {
+  req.body.location = req.user.location;
+
   const newToner = await Toner.create(req.body);
 
   return res.status(201).json({
