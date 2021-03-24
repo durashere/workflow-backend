@@ -1,5 +1,6 @@
-import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
+import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema(
   {
@@ -32,9 +33,19 @@ const userSchema = new mongoose.Schema(
       select: false,
       required: [true, 'You must enter password'],
     },
+    passwordResetToken: { type: String },
+    passwordResetExpires: { type: Date },
   },
   { timestamps: true }
 );
+
+userSchema.pre('save', function (next) {
+  // Only run this function if password was actually modified
+  if (!this.isModified('password') || this.isNew) return next();
+
+  this.passwordChangedAt = Date.now() - 1000;
+  next();
+});
 
 userSchema.pre('save', async function (next) {
   // Only run this function if password was actually modified
@@ -53,6 +64,21 @@ userSchema.methods.correctPassword = function (
   userPassword
 ) {
   return bcrypt.compare(candidatePassword, userPassword);
+};
+
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  console.log({ resetToken }, this.passwordResetToken);
+
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
 };
 
 userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {

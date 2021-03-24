@@ -4,6 +4,8 @@ import {
   signup,
   login,
   getUserFromToken,
+  forgotPassword,
+  resetPassword,
   protect,
   restrictTo,
 } from '../../controllers/auth.controller';
@@ -25,6 +27,8 @@ router.get(
 );
 router.post('/signup', signup);
 router.post('/login', login);
+router.post('/forgotpassword', protect, restrictTo('admin'), forgotPassword);
+router.patch('/resetpassword/:token', resetPassword);
 
 router
   .route('/')

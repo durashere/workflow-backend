@@ -1,8 +1,9 @@
+import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import jwtDecode from 'jwt-decode';
 
-import User from '../models/user.model';
 import { jwtSecret, jwtExpire } from '../../config/config';
+import User from '../models/user.model';
 
 const signToken = (id) =>
   jwt.sign({ id }, jwtSecret, {
@@ -28,6 +29,7 @@ export const signup = async (req, res) => {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
+    passwordConfirm: req.body.passwordConfirm,
   });
 
   const token = signToken(newUser._id);
@@ -56,6 +58,56 @@ export const login = async (req, res) => {
   }
 
   // If everything is ok, send token to client
+  const token = signToken(user._id);
+
+  return res.status(200).json({
+    token,
+  });
+};
+
+export const forgotPassword = async (req, res) => {
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return res.status(404).json({
+      message: 'There is no user with that email address.',
+    });
+  }
+
+  const resetToken = user.createPasswordResetToken();
+  await user.save({ validateBeforeSave: false });
+
+  return res.status(200).json({
+    resetToken,
+  });
+};
+
+export const resetPassword = async (req, res) => {
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex');
+
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return res.status(400).json({
+      message: 'Token is invalid or has expired.',
+    });
+  }
+  if (req.body.password !== req.body.passwordConfirm) {
+    return res.status(400).json({
+      message: 'Confirm password must match password.',
+    });
+  }
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+  await user.save();
+
   const token = signToken(user._id);
 
   return res.status(200).json({
