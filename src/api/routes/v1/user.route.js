@@ -3,7 +3,6 @@ import 'express-async-errors';
 import {
   signup,
   login,
-  getUserFromToken,
   forgotPassword,
   resetPassword,
   protect,
@@ -19,12 +18,6 @@ import {
 
 const router = Router();
 
-router.get(
-  '/getuserfromtoken',
-  protect,
-  restrictTo('user', 'admin'),
-  getUserFromToken
-);
 router.post('/signup', signup);
 router.post('/login', login);
 router.post('/forgotpassword', protect, restrictTo('admin'), forgotPassword);

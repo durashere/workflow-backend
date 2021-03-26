@@ -58,10 +58,13 @@ export const login = async (req, res) => {
   }
 
   // If everything is ok, send token to client
+  const sessionUser = await User.findOne({ email });
+
   const token = signToken(user._id);
 
   return res.status(200).json({
     token,
+    user: sessionUser,
   });
 };
 
@@ -149,27 +152,4 @@ export const restrictTo = (...roles) => (req, res, next) => {
       .json({ message: 'You do not have permission to peform this action.' });
   }
   return next();
-};
-
-export const getUserFromToken = async (req, res) => {
-  const token = bearerToToken(req.get('authorization'));
-
-  if (!token) {
-    return res.status(401).json({
-      message: 'You are not logged in! Please log in to get access.',
-    });
-  }
-
-  const decoded = jwtDecode(token);
-
-  const foundUser = await User.findById(decoded.id);
-  if (!foundUser) {
-    return res.status(401).json({
-      message: 'The user associated with this token no longer exists.',
-    });
-  }
-
-  return res.status(200).json({
-    user: foundUser,
-  });
 };
