@@ -100,6 +100,7 @@ export const resetPassword = async (req, res) => {
       message: 'Token is invalid or has expired.',
     });
   }
+
   if (req.body.password !== req.body.passwordConfirm) {
     return res.status(400).json({
       message: 'Confirm password must match password.',
@@ -114,6 +115,24 @@ export const resetPassword = async (req, res) => {
   return res.status(200).json({
     email: user.email,
   });
+};
+
+export const changePassword = async (req, res) => {
+  const user = await User.findById(req.user.id).select('+password');
+
+  // if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+  //   return res.status(401).json({
+  //     message: 'Inputted password does not match current password.',
+  //   });
+  // }
+
+  user.password = req.body.newPassword;
+  user.confirmPassword = req.body.newPasswordConfirm;
+  await user.save();
+
+  const token = signToken(user._id);
+
+  return res.status(200).json(token);
 };
 
 export const protect = async (req, res, next) => {

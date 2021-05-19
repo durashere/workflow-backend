@@ -7,6 +7,7 @@ import {
   resetPassword,
   protect,
   restrictTo,
+  changePassword,
 } from '../../controllers/auth.controller';
 import {
   getAllUsers,
@@ -21,6 +22,7 @@ const router = Router();
 router.post('/signup', signup);
 router.post('/login', login);
 router.post('/forgotpassword', protect, restrictTo('admin'), forgotPassword);
+router.patch('/changepassword', protect, changePassword);
 router.patch('/resetpassword/:token', resetPassword);
 
 router
