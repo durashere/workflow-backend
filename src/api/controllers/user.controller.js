@@ -1,7 +1,9 @@
 import User from '../models/user.model';
 
 export const getAllUsers = async (req, res) => {
-  const users = await User.find();
+  const users = await User.find().populate('location', {
+    __v: 0,
+  });
 
   return res.status(200).json({
     results: users.length,
@@ -10,7 +12,9 @@ export const getAllUsers = async (req, res) => {
 };
 
 export const getUser = async (req, res) => {
-  const user = await User.findById(req.params.id);
+  const user = await User.findById(req.params.id).populate('location', {
+    __v: 0,
+  });
 
   return res.status(200).json({
     user,

@@ -58,7 +58,9 @@ export const login = async (req, res) => {
   }
 
   // If everything is ok, send token to client
-  const sessionUser = await User.findOne({ email });
+  const sessionUser = await User.findOne({ email }).populate('location', {
+    __v: 0,
+  });
 
   const token = signToken(user._id);
 

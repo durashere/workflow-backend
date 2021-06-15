@@ -7,7 +7,7 @@ export const getAllToners = async (req, res) => {
   excludedFields.forEach((el) => delete queryObj[el]);
 
   // Filter by location
-  queryObj.location = req.user.location;
+  queryObj.location = req.user.location._id;
 
   let queryStr = JSON.stringify(queryObj);
   queryStr = queryStr.replace(
@@ -46,7 +46,7 @@ export const getAllUncategorized = async (req, res) => {
 
   // Filter by location
   const queryObj = {};
-  queryObj.location = req.user.location;
+  queryObj.location = req.user.location._id;
 
   const finalToners = await Toner.find({
     _id: { $nin: flattedToners },
@@ -68,7 +68,7 @@ export const getToner = async (req, res) => {
 };
 
 export const createToner = async (req, res) => {
-  req.body.location = req.user.location;
+  req.body.location = req.user.location._id;
 
   const newToner = await Toner.create(req.body);
 

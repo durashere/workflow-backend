@@ -22,11 +22,8 @@ const userSchema = new mongoose.Schema(
       default: 'user',
     },
     location: {
-      type: String,
-      enum: {
-        values: ['kra', 'war'],
-        message: 'Location must be set',
-      },
+      type: mongoose.Schema.ObjectId,
+      ref: 'Location',
     },
     password: {
       type: String,

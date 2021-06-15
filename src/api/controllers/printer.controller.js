@@ -23,8 +23,8 @@ export const getAllPrinters = async (req, res) => {
   }
 
   // Filter by location
-  queryObjPrinter.location = req.user.location;
-  queryObjToner.location = req.user.location;
+  queryObjPrinter.location = req.user.location._id;
+  queryObjToner.location = req.user.location._id;
 
   const printers = await Printer.find(queryObjPrinter)
     .sort({ brand: 1, model: 1 })
@@ -49,7 +49,7 @@ export const getPrinter = async (req, res) => {
 };
 
 export const createPrinter = async (req, res) => {
-  req.body.location = req.user.location;
+  req.body.location = req.user.location._id;
 
   const newPrinter = await Printer.create(req.body);
 

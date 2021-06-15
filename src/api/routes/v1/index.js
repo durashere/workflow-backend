@@ -3,6 +3,7 @@ import userRoutes from './user.route';
 import printerRoutes from './printer.route';
 import tonerRoutes from './toner.route';
 import templateRoutes from './template.route';
+import locationRoutes from './location.route';
 
 const router = Router();
 
@@ -19,5 +20,6 @@ router.use('/users', userRoutes);
 router.use('/printers', printerRoutes);
 router.use('/toners', tonerRoutes);
 router.use('/templates', templateRoutes);
+router.use('/locations', locationRoutes);
 
 export default router;
